@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "777446049320",
+    "project_id": "tourexpress-1a6c1",
+    "storage_bucket": "tourexpress-1a6c1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777446049320:android:7d1efcb23c2b4d9375d71d",
+        "android_client_info": {
+          "package_name": "com.example.tour_express"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777446049320-kdeijfk6h6j0s4l9vcqiqj40279knd78.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tour_express",
+            "certificate_hash": "10348e0ec26505097073d6c3ed72858f473a8310"
+          }
+        },
+        {
+          "client_id": "777446049320-n3r9l2qi22116f9em61s8kmm1f99sk6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFw33d3wpV5GtH64Goma3E_22JNyuCwnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777446049320-n3r9l2qi22116f9em61s8kmm1f99sk6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
