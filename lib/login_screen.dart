@@ -41,7 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
         message = e.message!;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.redAccent,
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _authService.signInWithGoogle();
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Google Sign-In failed: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google Sign-In failed: $e')),
+      );
     } finally {
       if (mounted) {
         setState(() => isLoading = false);
@@ -108,11 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                   ),
-                  validator:
-                      (value) =>
-                          value!.isEmpty || !value.contains('@')
-                              ? 'Enter a valid email'
-                              : null,
+                  validator: (value) =>
+                      value!.isEmpty || !value.contains('@')
+                          ? 'Enter a valid email'
+                          : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -123,11 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.lock_outline),
                     border: OutlineInputBorder(),
                   ),
-                  validator:
-                      (value) =>
-                          value!.length < 6
-                              ? 'Password must be at least 6 characters'
-                              : null,
+                  validator: (value) => value!.length < 6
+                      ? 'Password must be at least 6 characters'
+                      : null,
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
@@ -135,21 +135,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: isLoading ? null : _submit,
-                    child:
-                        isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : Text(isLogin ? 'Login' : 'Register'),
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(isLogin ? 'Login' : 'Register'),
                   ),
                 ),
                 TextButton(
                   onPressed: () => setState(() => isLogin = !isLogin),
-                  child: Text(
-                    isLogin
-                        ? 'Need an account? Register'
-                        : 'Have an account? Login',
-                  ),
+                  child: Text(isLogin
+                      ? 'Need an account? Register'
+                      : 'Have an account? Login'),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -157,10 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'OR',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
+                      child: Text('OR', style: TextStyle(color: Colors.grey[600])),
                     ),
                     const Expanded(child: Divider()),
                   ],
@@ -171,10 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: OutlinedButton.icon(
                     onPressed: isLoading ? null : _googleSignIn,
-                    icon: Image.asset(
-                      'assets/images/google_logo.png',
-                      height: 20,
-                    ),
+                    icon: Image.asset('assets/images/google_logo.png', height: 20),
                     label: const Text('Sign in with Google'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black.withOpacity(0.7),
