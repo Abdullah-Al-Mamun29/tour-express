@@ -1,4 +1,3 @@
-// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/tour_model.dart';
@@ -14,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // --- CORRECTED Tour Data with matching image paths from your assets folder ---
   final List<Tour> _allTours = [
     Tour(
       id: 't1',
@@ -23,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
       price: 10000.00,
       duration: '3 Days',
       imageUrls: [
-        // Using 'sundarban1.jpg' as the primary image
         'assets/images/sundarban1.jpg',
         'assets/images/sundarban5.jpg',
         'assets/images/sundarban3.jpg',
@@ -41,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
       price: 12000.00,
       duration: '3 Days',
       imageUrls: [
-        // Using 'cox3.jpg' as the primary image, as seen in the screenshot
         'assets/images/cox3.jpg',
         'assets/images/cox4.jpg',
         'assets/images/cox2.jpg',
@@ -59,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
       price: 12500.00,
       duration: '4 Days',
       imageUrls: [
-        // Using 'stmartin1.jpg' as the primary image (assuming 'stmartin.jpg' is a typo in your path)
         'assets/images/stmartin1.jpg',
         'assets/images/stmartin.jpg',
         'assets/images/stmartin2.jpg',
@@ -77,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
       price: 8500.00,
       duration: '3 Days',
       imageUrls: [
-        // Using 'sajek.jpg' or 'sajek1.jpg' as the primary image
         'assets/images/sajek.jpg',
         'assets/images/sajek4.jpg',
         'assets/images/sajek3.jpg',
@@ -222,12 +216,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _filterTours() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      _filteredTours =
-          _allTours.where((tour) {
-            final titleMatches = tour.title.toLowerCase().contains(query);
-            final locationMatches = tour.location.toLowerCase().contains(query);
-            return titleMatches || locationMatches;
-          }).toList();
+      _filteredTours = _allTours.where((tour) {
+        final titleMatches = tour.title.toLowerCase().contains(query);
+        final locationMatches = tour.location.toLowerCase().contains(query);
+        return titleMatches || locationMatches;
+      }).toList();
     });
   }
 
@@ -240,7 +233,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tour BD'), centerTitle: true),
+      appBar: AppBar(
+        // Corrected title to 'Tour Experess'
+        title: const Text('Tour Experess'),
+        centerTitle: true,
+        // Set the background color to a deep teal/green
+        backgroundColor: Colors.teal[700],
+        // Ensure the text and icons are white for good contrast
+        foregroundColor: Colors.white,
+      ),
       drawer: const AppDrawer(),
       body: Column(
         children: [
@@ -276,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// --- Redesigned Tour Card Widget ---
+//Redesigned Tour Card Widget
 class TourCard extends StatelessWidget {
   const TourCard({super.key, required this.tour});
 
@@ -309,7 +310,6 @@ class TourCard extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            // Gradient Overlay
             Container(
               height: 220,
               decoration: BoxDecoration(
@@ -330,6 +330,7 @@ class TourCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
+                  // Use the primary color of the theme for the price tag
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),

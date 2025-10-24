@@ -95,10 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Welcome!',
+                  'Welcome',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 Text(
                   isLogin ? 'Sign in to continue' : 'Create an account',
                   style: TextStyle(fontSize: 18, color: Colors.grey[700]),
@@ -111,10 +111,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                      value!.isEmpty || !value.contains('@')
-                          ? 'Enter a valid email'
-                          : null,
+                  validator: (value) => value!.isEmpty || !value.contains('@')
+                      ? 'Enter a valid email'
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -152,7 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('OR', style: TextStyle(color: Colors.grey[600])),
+                      child:
+                          Text('OR', style: TextStyle(color: Colors.grey[600])),
                     ),
                     const Expanded(child: Divider()),
                   ],
@@ -163,7 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: OutlinedButton.icon(
                     onPressed: isLoading ? null : _googleSignIn,
-                    icon: Image.asset('assets/images/google_logo.png', height: 20),
+                    icon: Image.asset('assets/images/google_logo.png',
+                        height: 20),
                     label: const Text('Sign in with Google'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black.withOpacity(0.7),
