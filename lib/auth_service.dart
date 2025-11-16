@@ -40,7 +40,8 @@ class AuthService {
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -61,7 +62,7 @@ class AuthService {
       if (await _googleSignIn.isSignedIn()) {
         await _googleSignIn.signOut();
       }
-      // Then, always sign out from Firebase
+
       await _auth.signOut();
     } catch (e) {
       rethrow;

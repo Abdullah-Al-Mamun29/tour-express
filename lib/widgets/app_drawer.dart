@@ -1,4 +1,3 @@
-// lib/widgets/app_drawer.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../auth_service.dart';
@@ -25,7 +24,8 @@ class AppDrawer extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Text(
                 user?.displayName?.substring(0, 1) ?? 'G',
-                style: TextStyle(fontSize: 40.0, color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    fontSize: 40.0, color: Theme.of(context).primaryColor),
               ),
             ),
             decoration: BoxDecoration(
@@ -55,8 +55,8 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: const Text('My Profile'),
             onTap: () {
-               Navigator.of(context).pop(); // Close the drawer
-               Navigator.of(context).push(
+              Navigator.of(context).pop(); // Close the drawer
+              Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ProfileScreen()),
               );
             },
@@ -67,7 +67,6 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () async {
               await authService.signOut();
-              // The auth state listener in main.dart will handle navigation.
             },
           ),
         ],

@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Booking History Section
+          // Booking History
           Text(
             'Booking History',
             style: Theme.of(context)
