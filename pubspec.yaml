@@ -1,14 +1,10 @@
-name: firebasetest
-description: "A new Flutter project."
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+name: tour_express
+description: "A Flutter project."
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  # UPDATE: Changed to a modern SDK version (Dart 3.0.0 or higher) 
-  # to be compatible with the recent package versions below.
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
@@ -16,21 +12,25 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  # Firebase packages are recent and require a modern Dart SDK
-  firebase_core: ^2.32.0
-  firebase_auth: ^4.20.0
-  google_sign_in: ^6.2.1
+
+  firebase_core: ^1.24.0
+  firebase_auth: ^3.11.2
+  google_sign_in: ^5.4.4
   provider: ^6.1.2
+
+  http: ^1.2.1
+  google_maps_flutter: ^2.5.3 
+  geolocator: ^10.1.0 
+  intl: ^0.17.0
+  permission_handler: ^12.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    # Ensure this is correct. If you have other folders like 'models' that need 
-    # asset files, they would need an entry, but usually, 'assets/images/' is enough.
     - assets/images/

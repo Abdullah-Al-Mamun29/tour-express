@@ -1,4 +1,3 @@
-// lib/screens/order_confirmation_screen.dart
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 
@@ -37,15 +36,18 @@ class OrderConfirmationScreen extends StatelessWidget {
                   onPressed: () {
                     // Navigate to home and remove all previous routes
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
                       (Route<dynamic> route) => false,
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Back to Home', style: TextStyle(fontSize: 18)),
+                  child: const Text('Back to Home',
+                      style: TextStyle(fontSize: 18)),
                 ),
               ),
             ],

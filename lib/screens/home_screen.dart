@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Tour> _allTours = [
     Tour(
       id: 't1',
-      title: 'Sundarbans ',
+      title: 'Sundarbans',
       location: 'Khulna, Bangladesh',
       price: 10000.00,
       duration: '3 Days',
@@ -30,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Explore the largest mangrove forest, home to the Royal Bengal Tiger. A journey into the wild heart of Bangladesh.',
       capacity: 15,
+      latitude: 21.9497,
+      longitude: 89.1833,
     ),
     Tour(
       id: 't2',
@@ -47,10 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Relax on the world\'s longest natural sea beach. Enjoy the sunset and vibrant local culture.',
       capacity: 10,
+      latitude: 21.4272,
+      longitude: 92.0058,
     ),
     Tour(
       id: 't3',
-      title: "Saint Martin's Island ",
+      title: "Saint Martin's Island",
       location: 'Saint Martin, Bangladesh',
       price: 12500.00,
       duration: '4 Days',
@@ -64,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'The only coral island in Bangladesh. Crystal clear water and pure tranquility await you.',
       capacity: 20,
+      latitude: 20.6278,
+      longitude: 92.3222,
     ),
     Tour(
       id: 't4',
@@ -72,15 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
       price: 8500.00,
       duration: '3 Days',
       imageUrls: [
+        'assets/images/sajek2.jpg',
         'assets/images/sajek.jpg',
-        'assets/images/sajek4.jpg',
         'assets/images/sajek3.jpg',
         'assets/images/sajek1.jpg',
-        'assets/images/sajek2.jpg',
       ],
       shortDesc:
           'Witness the clouds rolling beneath your feet in the scenic hills of Sajek, a breathtaking escape in the Chittagong Hill Tracts.',
       capacity: 20,
+      latitude: 23.1696,
+      longitude: 92.3498,
     ),
     Tour(
       id: 't5',
@@ -98,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'The only place in Bangladesh where you can view both the sunrise and sunset over the Bay of Bengal from the same beach.',
       capacity: 30,
+      latitude: 21.8062,
+      longitude: 90.1207,
     ),
     Tour(
       id: 't6',
@@ -115,6 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Cruise the largest man-made lake in Southeast Asia, surrounded by lush green hills and indigenous settlements.',
       capacity: 18,
+      latitude: 22.4801,
+      longitude: 92.2183,
     ),
     Tour(
       id: 't7',
@@ -132,6 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Stay above the clouds at Nilgiri, one of the highest and most popular peaks in the Bandarban region for stunning panoramic views.',
       capacity: 12,
+      latitude: 22.1685,
+      longitude: 92.2186,
     ),
     Tour(
       id: 't8',
@@ -149,6 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Explore a vast wetland ecosystem, a Ramsar site famous for its migratory birds and unique floating lifestyle.',
       capacity: 10,
+      latitude: 25.1361,
+      longitude: 91.4460,
     ),
     Tour(
       id: 't9',
@@ -166,11 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'The \'Tea Capital\' of Bangladesh. Wander through endless green tea plantations and experience the famous seven-layer tea.',
       capacity: 25,
+      latitude: 24.3061,
+      longitude: 91.7296,
     ),
     Tour(
       id: 't10',
       title: 'Panam Nagar',
-      location: 'Sonargaon,Bangladesh',
+      location: 'Sonargaon, Bangladesh',
       price: 4500.00,
       duration: '1 Day',
       imageUrls: [
@@ -183,6 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Step back in time at this preserved city of ancient merchants, a ghost town showcasing rich historical architecture.',
       capacity: 20,
+      latitude: 23.5150,
+      longitude: 90.7275,
     ),
     Tour(
       id: 't11',
@@ -200,6 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
       shortDesc:
           'Discover the scenic borderlands of Jaflong, famous for its stone collection from the river, and stunning views of the Meghalaya mountains.',
       capacity: 16,
+      latitude: 25.2030,
+      longitude: 91.8890,
     ),
   ];
 
@@ -234,12 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Corrected title to 'Tour Experess'
-        title: const Text('Tour Experess'),
+        title: const Text('Tour Express'),
         centerTitle: true,
-        // Set the background color to a deep teal/green
-        backgroundColor: Colors.teal[700],
-        // Ensure the text and icons are white for good contrast
+        backgroundColor: const Color.fromARGB(255, 2, 133, 117),
         foregroundColor: Colors.white,
       ),
       drawer: const AppDrawer(),
@@ -277,7 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-//Redesigned Tour Card Widget
 class TourCard extends StatelessWidget {
   const TourCard({super.key, required this.tour});
 
@@ -330,7 +347,6 @@ class TourCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  // Use the primary color of the theme for the price tag
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),

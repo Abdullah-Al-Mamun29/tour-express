@@ -1,4 +1,4 @@
-package com.example.tour_express
+package com.example.firebasetest
 
 import io.flutter.embedding.android.FlutterActivity
 

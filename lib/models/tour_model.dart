@@ -9,6 +9,8 @@ class Tour {
   final List<String> imageUrls;
   final String shortDesc;
   final int capacity;
+  final double latitude;
+  final double longitude;
 
   Tour({
     required this.id,
@@ -19,5 +21,7 @@ class Tour {
     required this.imageUrls,
     required this.shortDesc,
     required this.capacity,
+    required this.latitude,
+    required this.longitude,
   });
 }

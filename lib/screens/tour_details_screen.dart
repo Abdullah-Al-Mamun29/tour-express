@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart'; // <--- ADDED THIS IMPORT TO FIX 'ScrollDirection' ERROR
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../models/tour_model.dart';
+import '../models/weather_model.dart';
+import '../models/weather_daily_model.dart';
+import '../api/fetch_weather.dart';
 import '../providers/cart_provider.dart';
 
 class TourDetailsScreen extends StatefulWidget {
@@ -19,11 +24,24 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
   int _currentPage = 0;
   Timer? _autoScrollTimer;
 
+  late Future<Weather> _currentWeather;
+  late Future<List<DailyWeather>> _forecast;
+  GoogleMapController? mapController;
+  LatLng? _userLocation;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
     _startAutoScroll();
+
+    // Weather API
+    _currentWeather = WeatherService.getCurrentWeather(
+        widget.tour.latitude, widget.tour.longitude);
+    _forecast = WeatherService.get7DayForecast(
+        widget.tour.latitude, widget.tour.longitude);
+
+    _getUserLocation();
   }
 
   void _startAutoScroll() {
@@ -61,6 +79,19 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
     });
   }
 
+  Future<void> _getUserLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _userLocation = LatLng(position.latitude, position.longitude);
+    });
+  }
+
   @override
   void dispose() {
     _autoScrollTimer?.cancel();
@@ -77,7 +108,6 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            // Changed from 300 to 250 to reduce image height
             expandedHeight: 250,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -98,7 +128,6 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                   NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification notification) {
                       if (notification is UserScrollNotification) {
-                        // ScrollDirection is now defined due to the new import
                         if (notification.direction != ScrollDirection.idle) {
                           _autoScrollTimer?.cancel();
                         } else {
@@ -191,6 +220,102 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                     style: textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  FutureBuilder<Weather>(
+                    future: _currentWeather,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final weather = snapshot.data!;
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Image.network(
+                                'http://openweathermap.org/img/wn/${weather.icon}@2x.png'),
+                            title: Text(
+                                '${weather.temp}°C - ${weather.description}'),
+                            subtitle: Text(
+                                'Humidity: ${weather.humidity}% | Wind: ${weather.windSpeed} m/s'),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('Error loading weather');
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  SizedBox(
+                    height: 120,
+                    child: FutureBuilder<List<DailyWeather>>(
+                      future: _forecast,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final forecast = snapshot.data!;
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: forecast.length,
+                            itemBuilder: (context, index) {
+                              final day = forecast[index];
+                              return Card(
+                                margin: const EdgeInsets.all(8),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(day.day),
+                                      Image.network(
+                                        'http://openweathermap.org/img/wn/${day.icon}@2x.png',
+                                        width: 50,
+                                      ),
+                                      Text(
+                                          '${day.tempDay.toStringAsFixed(0)}° / ${day.tempNight.toStringAsFixed(0)}°'),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // ===== Google Map =====
+                  SizedBox(
+                    height: 300,
+                    child: GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target:
+                            LatLng(widget.tour.latitude, widget.tour.longitude),
+                        zoom: 12,
+                      ),
+                      markers: {
+                        Marker(
+                          markerId: const MarkerId('tour'),
+                          position: LatLng(
+                              widget.tour.latitude, widget.tour.longitude),
+                          infoWindow: InfoWindow(title: widget.tour.title),
+                        ),
+                        if (_userLocation != null)
+                          Marker(
+                            markerId: const MarkerId('user'),
+                            position: _userLocation!,
+                            infoWindow: const InfoWindow(title: 'You'),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                                BitmapDescriptor.hueBlue),
+                          ),
+                      },
+                      myLocationEnabled: true,
+                      onMapCreated: (controller) => mapController = controller,
                     ),
                   ),
                 ],
