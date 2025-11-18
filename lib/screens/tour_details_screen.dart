@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+// Flutter Map Imports
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+
 import '../models/tour_model.dart';
 import '../models/weather_model.dart';
 import '../models/weather_daily_model.dart';
@@ -26,8 +29,15 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
 
   late Future<Weather> _currentWeather;
   late Future<List<DailyWeather>> _forecast;
-  GoogleMapController? mapController;
+
+  // MapController for flutter_map
+  final MapController mapController = MapController();
+
+  // LatLng for location data
   LatLng? _userLocation;
+
+  // Flag to know if the map is initialized and ready to be moved
+  bool _isMapReady = false;
 
   @override
   void initState() {
@@ -35,7 +45,7 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
     _pageController = PageController(initialPage: _currentPage);
     _startAutoScroll();
 
-    // Weather API
+    // Weather API initialization
     _currentWeather = WeatherService.getCurrentWeather(
         widget.tour.latitude, widget.tour.longitude);
     _forecast = WeatherService.get7DayForecast(
@@ -80,15 +90,24 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
   }
 
   Future<void> _getUserLocation() async {
+    // Check and request location permission
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
 
+    // Get current position
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+
+    // Update UI with new location
     setState(() {
       _userLocation = LatLng(position.latitude, position.longitude);
+
+      // FIX: Only try to move the map if the map widget has confirmed it is ready.
+      if (_isMapReady) {
+        mapController.move(_userLocation!, 12);
+      }
     });
   }
 
@@ -97,6 +116,72 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
     _autoScrollTimer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  // Widget to display the Open-Source Map (FlutterMap)
+  Widget _buildFlutterMap() {
+    // LatLng for the Tour location
+    final tourLocation = LatLng(widget.tour.latitude, widget.tour.longitude);
+
+    // Initial center point prioritizes user location if available
+    final initialCenter = _userLocation ?? tourLocation;
+
+    return SizedBox(
+      height: 300,
+      child: FlutterMap(
+        mapController: mapController,
+        options: MapOptions(
+            initialCenter: initialCenter,
+            initialZoom: 12,
+            // NEW: Use onMapReady callback to set the flag and move the map
+            onMapReady: () {
+              // This is called when the map widget is fully built and ready to accept commands.
+              _isMapReady = true;
+              if (_userLocation != null) {
+                mapController.move(_userLocation!, 12);
+              }
+            }),
+        children: [
+          // 1. Map Tiles (using free OpenStreetMap)
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.tour_express',
+          ),
+
+          // 2. Markers Layer
+          MarkerLayer(
+            markers: [
+              // Tour Location Marker
+              Marker(
+                point: tourLocation,
+                width: 80,
+                height: 80,
+                builder: (context) => const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 40,
+                ),
+                rotate: true,
+              ),
+
+              // User Location Marker (if available)
+              if (_userLocation != null)
+                Marker(
+                  point: _userLocation!,
+                  width: 80,
+                  height: 80,
+                  builder: (context) => const Icon(
+                    Icons.person_pin_circle,
+                    color: Colors.blue,
+                    size: 40,
+                  ),
+                  rotate: true,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -140,7 +225,7 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                       controller: _pageController,
                       itemCount: widget.tour.imageUrls.length,
                       onPageChanged: _onPageChanged,
-                      itemBuilder: (context, index) {
+                      builder: (context, index) {
                         return Image.asset(
                           widget.tour.imageUrls[index],
                           fit: BoxFit.cover,
@@ -224,6 +309,7 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  // ===== Current Weather =====
                   FutureBuilder<Weather>(
                     future: _currentWeather,
                     builder: (context, snapshot) {
@@ -249,6 +335,7 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                   ),
                   const SizedBox(height: 16),
 
+                  // ===== 7 Day Forecast =====
                   SizedBox(
                     height: 120,
                     child: FutureBuilder<List<DailyWeather>>(
@@ -259,7 +346,7 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: forecast.length,
-                            itemBuilder: (context, index) {
+                            builder: (context, index) {
                               final day = forecast[index];
                               return Card(
                                 margin: const EdgeInsets.all(8),
@@ -289,35 +376,16 @@ class _TourDetailsScreenState extends State<TourDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // ===== Google Map =====
-                  SizedBox(
-                    height: 300,
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target:
-                            LatLng(widget.tour.latitude, widget.tour.longitude),
-                        zoom: 12,
-                      ),
-                      markers: {
-                        Marker(
-                          markerId: const MarkerId('tour'),
-                          position: LatLng(
-                              widget.tour.latitude, widget.tour.longitude),
-                          infoWindow: InfoWindow(title: widget.tour.title),
-                        ),
-                        if (_userLocation != null)
-                          Marker(
-                            markerId: const MarkerId('user'),
-                            position: _userLocation!,
-                            infoWindow: const InfoWindow(title: 'You'),
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueBlue),
-                          ),
-                      },
-                      myLocationEnabled: true,
-                      onMapCreated: (controller) => mapController = controller,
+
+                  // ===== Open-Source Map (FlutterMap) =====
+                  Text(
+                    'Map Location',
+                    style: textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  _buildFlutterMap(),
                 ],
               ),
             ),
