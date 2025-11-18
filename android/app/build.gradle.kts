@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.tour_express"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -31,6 +31,10 @@ android {
         release {
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
